@@ -1,0 +1,145 @@
+@import url("https://fonts.googleapis.com/css2?family=Gluten:wght@200&display=swap");
+
+html {
+  font-family: "Gluten", cursive;
+  font-size: 10px;
+}
+
+:root {
+  --bg-color: #222222;
+  --slot-bg-color: #2d2d2d;
+  --O-color: #d55236;
+  --X-color: #43a7c1;
+}
+
+* {
+  background-color: var(--bg-color);
+  color: white;
+  margin: 0;
+}
+
+button.setting,
+button.modal-submit {
+  font-family: "Gluten", cursive;
+  font-size: 2.5rem;
+  background-color: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.header {
+  padding: 1vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  padding-top: 10vh;
+  display: flex;
+  justify-content: space-around;
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  width: 60vmin;
+  height: 60vmin;
+  gap: 2vmin;
+}
+
+.slot {
+  background-color: var(--slot-bg-color);
+  border-radius: 10px;
+  font-size: 10vmin;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.slot span {
+  background-color: var(--slot-bg-color);
+  text-shadow: 5px 5px 7px var(--bg-color);
+}
+
+.X {
+  color: var(--X-color);
+}
+
+label.X {
+  font-size: 3rem;
+}
+
+.O {
+  color: var(--O-color);
+}
+
+label.O {
+  font-size: 3rem;
+}
+
+button.modal-submit {
+  padding: 1vh 1vw 1vh 1vw;
+  margin: 3vh 0 1vh 0;
+  border: solid rgba(255, 255, 255, 0.555) 1px;
+}
+
+h1.modal-header,
+h1.game-message {
+  font-size: 5rem;
+  margin-bottom: 1.5vh;
+}
+
+.modal-text {
+  font-size: 3rem;
+}
+
+input.modal-input-radio,
+input.modal-input-checkbox {
+  width: 2vh;
+  height: 2vh;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding-top: 13vh;
+  z-index: 1;
+}
+
+.modal-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  top: 15vh;
+  margin: auto;
+  width: 50%;
+  border: solid rgba(255, 255, 255, 0.555) 1px;
+  border-radius: 15px;
+  background-color: var(--bg-color);
+  animation-name: animate-modal;
+  animation-duration: 0.5s;
+  padding: 1vw;
+}
+
+@keyframes animate-modal {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

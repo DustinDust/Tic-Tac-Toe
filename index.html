@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="script/script.js" defer></script>
+  </head>
+  <body>
+    <div class="header">
+      <div><button class="setting">Setting</button></div>
+    </div>
+    <div class="container">
+      <div class="game-board">
+        <div class="slot one"><span>T</span></div>
+        <div class="slot two"><span>I</span></div>
+        <div class="slot three"><span>C</span></div>
+        <div class="slot four"><span>T</span></div>
+        <div class="slot five"><span>A</span></div>
+        <div class="slot six"><span>C</span></div>
+        <div class="slot seven"><span>T</span></div>
+        <div class="slot eight"><span>O</span></div>
+        <div class="slot nine"><span>E</span></div>
+      </div>
+    </div>
+    <div class="modal setting-menu">
+      <div class="modal-content">
+        <h1 class="modal-header">Setting</h1>
+        <form class="setting-form">
+          <span class="modal-text">
+            Who will play first? &NonBreakingSpace;
+          </span>
+          <label class="X">
+            <input
+              type="radio"
+              name="whoFirst"
+              value="X"
+              class="modal-input-radio"
+            />
+            X &NonBreakingSpace;
+          </label>
+          <label class="O">
+            <input
+              type="radio"
+              name="whoFirst"
+              value="O"
+              class="modal-input-radio"
+            />
+            O
+          </label>
+          <br /><br /><br /><br />
+          <label class="modal-text">
+            Play with bot? &NonBreakingSpace;
+            <input type="checkbox" name="bot" class="modal-input-checkbox" />
+          </label>
+          <br />
+          <button type="submit" class="modal-submit">Save and Restart!</button>
+        </form>
+      </div>
+    </div>
+    <div class="modal result-menu">
+      <div class="modal-content">
+        <h1 class="game-message"></h1>
+        <button class="modal-submit restart">Restart?</button>
+      </div>
+    </div>
+  </body>
+</html>
