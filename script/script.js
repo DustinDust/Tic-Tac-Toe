@@ -42,9 +42,87 @@ let playerFactory = (type) => {
   };
 };
 
+function botFactory(type) {
+  let _playingAs = type ? "X" : "O";
+
+  function calculate(state, depth, isMax) {
+    if (state.result === 1) {
+      if (state.winner === _playingAs) {
+        return +1;
+      } else return -1;
+    } else if (state.result === 0) {
+      return 0;
+    }
+
+    if (isMax) {
+      let bestScore = -Infinity;
+      for (let i = 0; i < gameBoard.getState().length; i++) {
+        if (Number.isNaN(gameBoard.getState()[i])) {
+          let newState = gameBoard.set(i + 1, _playingAs);
+          let score = calculate(newState, depth + 1, isMax);
+          bestScore = Math.max(bestScore, score);
+          gameBoard.set(i + 1, NaN);
+        }
+      }
+      return bestScore;
+    } else {
+      let bestScore = +Infinity;
+      for (let i = 0; i < gameBoard.getState().length; i++) {
+        if (Number.isNaN(gameBoard.getState()[i])) {
+          let newState = gameBoard.set(i + 1, _playingAs === "X" ? "O" : "X");
+          let score = calculate(newState, depth + 1, !isMax);
+          bestScore = Math.min(bestScore, score);
+          gameBoard.set(i + 1, NaN);
+        }
+      }
+      return bestScore;
+    }
+  }
+
+  function play() {
+    let bestMove = { move: -1, score: -Infinity };
+    for (let i = 0; i < gameBoard.getState().length; i++) {
+      if (Number.isNaN(gameBoard.getState()[i])) {
+        let tryState = gameBoard.set(i + 1, _playingAs);
+        let newScore = calculate(tryState, 0, false);
+        if (newScore > bestMove.score) {
+          bestMove.move = i + 1;
+          bestMove.score = newScore;
+        }
+        gameBoard.set(i + 1, NaN);
+      }
+    }
+    console.log(bestMove);
+    return gameBoard.set(bestMove.move, _playingAs);
+  }
+  return {
+    play,
+  };
+}
+
 const gameBoard = (function () {
   //NaN for empty slot
   let _state = [NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN];
+
+  function getResult() {
+    let newState = _checkState();
+    let full = !_state.some((pos) => Number.isNaN(pos));
+    if (newState.end) {
+      return {
+        result: 1,
+        winner: newState.winner,
+      };
+    } else if (full) {
+      return {
+        result: 0,
+        winner: null,
+      };
+    } else
+      return {
+        result: -1,
+        winner: null,
+      };
+  }
 
   //check if the game end
   function _checkState() {
@@ -88,16 +166,7 @@ const gameBoard = (function () {
   //play a move, then check if the board is full, and the current game state
   function set(pos, move) {
     _state[pos - 1] = move;
-    if (_state.some((pos) => Number.isNaN(pos)))
-      return {
-        nextMove: true,
-        state: _checkState(),
-      };
-    else
-      return {
-        nextMove: false,
-        state: _checkState(),
-      };
+    return getResult();
   }
 
   //expose
@@ -111,33 +180,52 @@ const gameBoard = (function () {
 const gameController = (function () {
   let _players = [];
   let _playing = undefined;
+  let _bot;
 
-  let playGame = (pos) => {
-    let newState = _players[_playing].play(pos);
-    if (newState.state.end === true) {
+  let checkAfterMove = (newState) => {
+    if (newState.result === 1) {
       return {
-        message: `The winner is ${newState.state.winner} player!`,
+        message: `The winner is ${newState.winner} player!`,
         end: true,
       };
-    } else if (newState.nextMove === false) {
+    } else if (newState.result === 0) {
       return {
         message: "Draw!",
         end: true,
       };
     } else {
-      _playing = _playing === 0 ? 1 : 0;
       return {
         end: false,
       };
     }
   };
 
+  let playGame = (pos) => {
+    let newState = _players[_playing].play(pos);
+    _playing = _playing === 0 ? 1 : 0;
+
+    if (checkAfterMove(newState).end === false && _bot === true) {
+      _playing = _playing === 0 ? 1 : 0;
+      return checkAfterMove(_players[1].play());
+    } else return checkAfterMove(newState);
+  };
+
   let init = (whoFirst, bot = false) => {
     gameBoard.reset();
-    _playing = whoFirst === "X" ? 0 : 1;
+    _playing = 0;
     if (bot) {
-      _players = [playerFactory(), botFactory()];
-    } else _players = [playerFactory(true), playerFactory(false)];
+      _bot = true;
+      _players = [
+        playerFactory(whoFirst === "X"),
+        botFactory(whoFirst === "O"),
+      ];
+    } else {
+      _bot = false;
+      _players = [
+        playerFactory(whoFirst === "X"),
+        playerFactory(whoFirst === "O"),
+      ];
+    }
   };
   return {
     init,
